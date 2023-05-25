@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import Col from 'react-bootstrap/Col';
 const WeatherDetails = (props) => {
   console.log(props)
-   let imageurl = "http://openweathermap.org/img/w/" + props.info.iconcode + ".png"
+   let imageurl = "https://openweathermap.org/img/w/" + props.info.iconcode + ".png"
   return (
     // <div>
     //     <h2>{props.info.date}</h2>

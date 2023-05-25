@@ -14,7 +14,7 @@ const WeatherApp = () => {
   const fetchWeatherApp = async () => {
     const apiKey = "efdd832268c65d9d80425369707ef308";
     const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&units=imperial&exclude=current,minutely,hourly,alerts&APPID=${apiKey}`;
-    const urlForecast = `http://api.openweathermap.org/data/2.5/forecast?zip=${zipcode},us&units=imperial&APPID=${apiKey}`;
+    const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?zip=${zipcode},us&units=imperial&APPID=${apiKey}`;
 
     try {
       const dataCurrent = await getWeather(urlCurrent);
