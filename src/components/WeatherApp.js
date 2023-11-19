@@ -13,34 +13,52 @@ const WeatherApp = () => {
 
   const fetchWeatherApp = async () => {
     const apiKey = "efdd832268c65d9d80425369707ef308";
-    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&units=imperial&exclude=current,minutely,hourly,alerts&APPID=${apiKey}`;
-    const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?zip=${zipcode},us&units=imperial&APPID=${apiKey}`;
+    let apiUrl = "";
+
+    
+    if (zipcode) {
+      apiUrl = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&units=imperial&exclude=current,minutely,hourly,alerts&APPID=${apiKey}`;
+    } else if (name) {
+      
+      apiUrl = `https://api.openweathermap.org/data/2.5/weather?name=${name}&units=imperial&exclude=current,minutely,hourly,alerts&APPID=${apiKey}`;
+    }
 
     try {
-      const dataCurrent = await getWeather(urlCurrent);
-      const dataForecast = await getWeather(urlForecast);
+      if (apiUrl) {
+        const dataCurrent = await getWeather(apiUrl);
+        const dataForecast = await getWeather(
+          `https://api.openweathermap.org/data/2.5/forecast?zip=${zipcode},us&units=imperial&APPID=${apiKey}`
+        );
 
-      const forecast = dataForecast.list
-        .filter((data) => data.dt_txt.includes("12:00:00"))
-        .map((data) => {
-          data.main.description = data.weather[0].description;
-          return {
-            ...data.main,
-            iconcode: data.weather[0].icon,
-          };
-        });
+    
+        const forecast = dataForecast.list
+          .filter((data) => data.dt_txt.includes("12:00:00"))
+          .map((data) => {
+            data.main.description = data.weather[0].description;
+            return {
+              ...data.main,
+              iconcode: data.weather[0].icon,
+            };
+          });
 
-      const data = combineCurrentAndForecast(dataCurrent, forecast);
+        const combinedData = combineCurrentAndForecast(dataCurrent, forecast);
 
-      setName(data.name);
-      setForecast(data.forecast);
+        setName(combinedData.name);
+        setForecast(combinedData.forecast);
+      }
     } catch (error) {
       console.error("Error fetching weather data:", error);
     }
   };
 
-  const handleTextChange = (zipcode) => {
-    setZipcode(zipcode);
+  const handleTextChange = (input) => {
+    const isZipCode = /^\d+$/.test(input);
+
+    if (isZipCode) {
+      setZipcode(input);
+    } else {
+      setName(input);
+    }
   };
 
   const getWeather = async (url) => {
